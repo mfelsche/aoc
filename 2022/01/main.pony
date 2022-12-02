@@ -7,11 +7,11 @@ Find the Elf carrying the most Calories. How many total Calories is that Elf car
 Part 2:
 Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 """
-use @pony_os_errno[I32]()
 use "files"
-use "collections"
+se "collections"
 use "itertools"
 use "debug"
+use ".."
 
 
 // stolen from https://github.com/salty-blue-mango/roaring-pony
@@ -69,40 +69,11 @@ class Max3ElfAcc
 
 
 actor Main
-  fun get_input_file(env: Env): File ? =>
-    if env.args.size() < 2 then
-      error
-    else
-      let file_auth = FileAuth(env.root)
-      let path = FilePath(file_auth, env.args(env.args.size() - 1)?, recover val FileCaps .> all() end )
-      match OpenFile(path)
-      | let file: File =>
-        file
-      | let _: FileEOF =>
-        env.err.print("EOF")
-        error
-      | let _: FileOK =>
-        env.err.print("OK") // weird
-        error
-      | let _: FileError =>
-        env.err.print("Error: " + @pony_os_errno().string())
-        error
-      | let _: FileBadFileNumber =>
-        env.err.print("Bad file number")
-        error
-      | let _: FileExists =>
-        env.err.print("Exists")
-        error
-      | let _: FilePermissionDenied =>
-        env.err.print("Permission denied")
-        error
-      end
-    end
 
   new create(env: Env) =>
     try
-      let file = get_input_file(env)?
-      let elf_acc: Max3ElfAcc = Iter[String iso^](file.lines()).fold_partial[Max3ElfAcc](
+      let lines = AOCUtils.get_input_lines("input.txt", env)?
+      let elf_acc: Max3ElfAcc = Iter[String iso^](lines).fold_partial[Max3ElfAcc](
         Max3ElfAcc,
         object
           fun apply(acc: Max3ElfAcc, line: String iso): Max3ElfAcc^ ? =>
