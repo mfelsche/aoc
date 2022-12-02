@@ -8,7 +8,7 @@ Part 2:
 Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 """
 use "files"
-se "collections"
+use "collections"
 use "itertools"
 use "debug"
 use ".."
