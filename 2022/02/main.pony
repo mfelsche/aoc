@@ -99,8 +99,8 @@ primitive Round
   fun score(me: Shape, opponent: Shape): U32 =>
     let outcome: Outcome =
       match (me, opponent)
-      | (Rock, Paper) | (Paper, Scissors) | (Scissors, Rock) => Loss
-      | (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
+      | (Rock, Paper)    | (Paper, Scissors) | (Scissors, Rock) => Loss
+      | (Rock, Scissors) | (Paper, Rock)     | (Scissors, Paper) => Win
       else
         Draw
       end
@@ -116,6 +116,7 @@ actor Main
     let o_shape = Shapes.from_char(opponent(0)?)?
     let me_shape = Shapes.from_char(me(0)?)?
     Round.score(me_shape, o_shape)
+
   fun calculate_part2_score(opponent: String, outcome: String): U32 ? =>
     let o_shape = Shapes.from_char(opponent(0)?)?
     let expected_outcome = Outcomes.from_char(outcome(0)?)?
