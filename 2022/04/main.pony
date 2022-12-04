@@ -44,6 +44,22 @@ Some of the pairs have noticed that one of their assignments fully contains the 
 
 In how many assignment pairs does one range fully contain the other?
 
+
+--- Part Two ---
+
+It seems like there is still quite a bit of duplicate work planned. Instead, the Elves would like to know the number of pairs that overlap at all.
+
+In the above example, the first two pairs (2-4,6-8 and 2-3,4-5) don't overlap, while the remaining four pairs (5-7,7-9, 2-8,3-7, 6-6,4-6, and 2-6,4-8) do overlap:
+
+    5-7,7-9 overlaps in a single section, 7.
+    2-8,3-7 overlaps all of the sections 3 through 7.
+    6-6,4-6 overlaps in a single section, 6.
+    2-6,4-8 overlaps in sections 4, 5, and 6.
+
+So, in this example, the number of overlapping assignment pairs is 4.
+
+In how many assignment pairs do the ranges overlap?
+
 """
 use ".."
 use "itertools"
@@ -63,19 +79,36 @@ class val Assignment
   fun box contains(other: Assignment): Bool =>
     (other._min >= _min) and (other._max <= _max)
 
+  fun box is_inside(num: U32): Bool =>
+    //TODO: support inclusive/exclusive bounds
+    (_min <= num) and (num <= _max)
+
+  fun box overlaps_with(other: Assignment): Bool =>
+    is_inside(other._min) or is_inside(other._max)
+
 actor Main
   new create(env: Env) =>
     try
       let lines = AOCUtils.get_input_lines("input.txt", env)?
-      var sum: U32 = 0
+      var contains_sum: U32 = 0
+      var overlaps_sum: U32 = 0
       for line in lines do
         if line.size() == 0 then continue end
         let pair = line.split_by(",", 2)
         let a1 = Assignment(pair(0)?)?
         let a2 = Assignment(pair(1)?)?
-        sum = sum + if a1.contains(a2) or a2.contains(a1) then 1 else 0 end
+        if a1.contains(a2) or a2.contains(a1) then
+          contains_sum = contains_sum + 1
+          // containment is already an overlap
+          overlaps_sum = overlaps_sum + 1
+        elseif a1.overlaps_with(a2) then
+          // we only need to check the containment cases
+          // if we have no overlap, so check in 1 direction is enough
+          overlaps_sum = overlaps_sum + 1
+        end
       end
-      env.out.print(sum.string())
+      env.out.print("Containing pairs: " + contains_sum.string())
+      env.out.print("Overlapping pairs: " + overlaps_sum.string())
     else
       env.exitcode(1)
     end
