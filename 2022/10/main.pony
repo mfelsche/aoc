@@ -372,7 +372,6 @@ class ref CRT
   fun ref draw_pixel(sprite_pos: I64) ? =>
     let line = pos / 40
     let h_pos = pos % 40
-    Debug("line: " + line.string() + " h: " + h_pos.string() + "sprite: " + sprite_pos.string())
     let pixel: U8 =
       if (h_pos.i64() == (sprite_pos - 1))
         or (h_pos.i64() == sprite_pos)
