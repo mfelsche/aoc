@@ -1,0 +1,27 @@
+DIGIT19 <- '1'..'9'
+DIGIT <- '0'..'9'
+DIGITS <- DIGIT+
+NUMBER <- DIGIT19 DIGITS / DIGIT
+TRUE <- "true"
+FALSE <- "false"
+NEW <- "new"
+OLD <- "old"
+PLUS <- '+'
+MULTIPLY <- '*'
+NEWLINE <- '\n'
+
+operand <- (NEW / OLD / NUMBER)
+bool <- (TRUE / FALSE)
+numbers <- (NUMBER % ',')
+
+operator <- (PLUS / MULTIPLY)
+whitespace <- (' ' / '\t' / '\r' / NEWLINE)+
+
+monkey <- -"Monkey" NUMBER -":"
+starting_items <- -"Starting items:" numbers
+operation <- -"Operation:" NEW -"=" operand operator operand
+if <- -"If" bool -":" -"throw to monkey" NUMBER
+test <- -"Test:" -"divisible" -"by" NUMBER if+
+monkeys <- (monkey starting_items operation test)+
+start <- monkeys
+hidden <- whitespace
