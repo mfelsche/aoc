@@ -67,9 +67,7 @@ class Solution is AocSolution
   fun ref part1(): String iso^ ? =>
     (let left, let right) = this.get_input() ?
     let sorted_left = Sort[Array[U32], U32](consume left)
-    //Debug(sorted_left)
     let sorted_right = Sort[Array[U32], U32](consume right)
-    //Debug(sorted_right)
     Iter[U32](sorted_left.values()).zip[U32](sorted_right.values()).map[U32]({(pair: (U32, U32)): U32 =>
       if pair._1 > pair._2 then
         pair._1 - pair._2
@@ -128,7 +126,6 @@ class Solution is AocSolution
             counter_map.reserve(i.usize()) // :(((
           end
           counter_map(previous.usize())? = num_similar
-          Debug("i=" + previous.string() + ", num_similar=" + num_similar.string())
         end
         num_similar = 1
       elseif i == previous then
@@ -150,7 +147,6 @@ class Solution is AocSolution
         try
           let multiplier = counter_map(l.usize())?
           if multiplier > 0 then
-            Debug(sum.string() + " += " + l.string() + " * " + multiplier.string() )
             sum = sum + (l * multiplier.u32())
           end
         end

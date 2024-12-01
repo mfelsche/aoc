@@ -15,7 +15,8 @@ primitive AOCUtils
       env.err.print("OK") // weird
       error
     | let _: FileError =>
-      env.err.print("Error opening " + path.string())
+      env.err.print("Error opening " + path.string() ". You might need to
+      download the input and put it into input.txt")
       error
     | let _: FileBadFileNumber =>
       env.err.print("Bad file number")
