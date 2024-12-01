@@ -1,0 +1,15 @@
+{
+  "packages": [
+    "2024",
+    "2024/01"
+  ],
+  "deps": [],
+  "info": {
+    "description": "Advent of Code in Pony",
+    "homepage": "",
+    "license": "",
+    "documentation_url": "",
+    "version": "0.69.42",
+    "name": "advent of pony"
+  }
+}
