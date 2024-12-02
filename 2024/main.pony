@@ -3,17 +3,15 @@ use day2 = "02"
 
 use "cli"
 use "itertools"
+use "pony_check"
 
 actor Main
-
-
   new create(env: Env) =>
-
     let cs =
       try
         CommandSpec.leaf("aoc", "An AOC runner", [
           OptionSpec.u64("day", "Run the program of the given day"
-            where short' = 'd'
+            where short' = 'd', default' = 0
           )
         ], [
         ])? .> add_help()?
@@ -35,7 +33,6 @@ actor Main
           return
       end
 
-    let year = cmd.option("year").u64()
     let day: (U64 | None) = 
       match cmd.option("day").u64()
       | 0 => None // run all days
@@ -44,19 +41,12 @@ actor Main
 
 
     let solutions: Array[AocSolution ref] ref = [
-      day1.Solution(env)
+      // add new solution here
       day2.Solution(env)
+      day1.Solution(env)
     ]
 
-    while solutions.size() > 0 do
-      let solution: AocSolution ref =
-        try
-          solutions.shift()?
-        else
-          env.err.print("No more solutions")
-          env.exitcode(1)
-          return
-        end
+    for solution in Poperator[AocSolution ref].create(solutions) do
       match day
       | None | solution.day() =>
         env.out.print("Running Day " + solution.day().string())
@@ -89,7 +79,6 @@ actor Main
 trait AocSolution
   new ref create(env: Env)
 
-  fun tag year(): U64
   fun tag day(): U64
 
   fun ref part1(): String?

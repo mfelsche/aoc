@@ -10,7 +10,6 @@ class Solution is AocSolution
     _env = env
 
   fun tag day(): U64 => 2
-  fun tag year(): U64 => 2024
 
   fun ref get_input(file_path: String): Iterator[Array[I32]] ? =>
     Iter[String](AOCUtils.get_input_lines(file_path, _env)?).map[Array[I32]]({(line: String) =>

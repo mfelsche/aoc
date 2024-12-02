@@ -9,7 +9,6 @@ class Solution is AocSolution
     _env = env
 
   fun tag day(): U64 => 1
-  fun tag year(): U64 => 2024
 
   fun ref get_input(): (Array[U32], Array[U32]) ? =>
     let left: Array[U32] ref = Array[U32].create(64)
