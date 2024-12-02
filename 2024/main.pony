@@ -1,4 +1,5 @@
 use day1 = "01"
+use day2 = "02"
 
 use "cli"
 use "itertools"
@@ -44,6 +45,7 @@ actor Main
 
     let solutions: Array[AocSolution ref] ref = [
       day1.Solution(env)
+      day2.Solution(env)
     ]
 
     while solutions.size() > 0 do
