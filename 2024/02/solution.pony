@@ -18,7 +18,7 @@ class Solution is AocSolution
           .collect(Array[I32].create(10))
     })
   
-  fun signum[U: (UnsignedInteger[U] & Unsigned), T: (SignedInteger[T, U] & Signed)](num: T): T =>
+  fun signum[T: (Integer[T] & Signed)](num: T): T =>
     if num > T.from[I8](0) then 
       T.from[I8](1)
     elseif num < T.from[I8](0) then
@@ -39,7 +39,7 @@ class Solution is AocSolution
         | let prev: I32 =>
           let diff = prev - level
           let abs_diff = diff.abs()
-          let direction = signum[U32, I32](diff)
+          let direction = signum[I32](diff)
           let cur_safe = 
             (1 <= abs_diff) and (abs_diff <= 3)
             and
@@ -80,7 +80,7 @@ class Solution is AocSolution
           | let prev: I32 =>
             let diff = prev - level
             let abs_diff = diff.abs()
-            let direction = signum[U32, I32](diff)
+            let direction = signum[I32](diff)
             let cur_safe = 
               (1 <= abs_diff) and (abs_diff <= 3)
               and
