@@ -133,7 +133,7 @@ actor Solution is AocSolution
                 input_array.read_u64(i)?.bswap().usize()
               end
 
-            Debug("chunk " + input.trim(i, i + 8))
+            //Debug("chunk " + input.trim(i, i + 8))
             if has_zero_byte(haystack xor splatted_d) > 0 then
               // we have a d
               for _ in Range(0, i.bytewidth()) do
@@ -145,7 +145,7 @@ actor Solution is AocSolution
                     let do_chunk_cont = input_array.read_u32(i)?
                     if (do_chunk_cont xor dont_cond_end) == 0 then
                       enabled = false
-                      Debug("don't()")
+                      //Debug("don't()")
                       break
                     else
                       i = i + 1
@@ -158,7 +158,7 @@ actor Solution is AocSolution
                   if (do_chunk xor do_cond) == 0 then
                     i = i + 4
                     enabled = true
-                    Debug("do()")
+                    //Debug("do()")
                     break
                   else
                     i = i + 1
@@ -179,7 +179,7 @@ actor Solution is AocSolution
                     (let second_multiplier, let paren_offset) = extract_num(input, i, ')')
                     if second_multiplier >= 0 then
                       i = i + paren_offset + 1
-                      Debug(first_multiplier.string() + " * " + second_multiplier.string())
+                      //Debug(first_multiplier.string() + " * " + second_multiplier.string())
                       result = result + (first_multiplier * second_multiplier).u64()
                       break
                     end
