@@ -28,6 +28,46 @@ primitive AOCUtils
       error
     end
 
+  fun get_input(path: String, env: Env): String iso^ ? =>
+    let file_path = FilePath(FileAuth(env.root), path, recover val FileCaps .> set(FileRead) .> set(FileStat) end )
+    match OpenFile(file_path)
+    | let file: File =>
+      let file_len = file.size()
+      let buf = recover iso Array[U8].create(file_len) end
+      while buf.size() < file_len do
+        let data = file.read(file_len)
+        if data.size() > 0 then
+          buf.append(consume data)
+        end
+        if file.errno() isnt FileEOF then
+          break
+        end
+        if file.errno() isnt FileOK then
+          env.err.print("Error reading from file")
+          error
+        end
+      end
+      String.from_iso_array(consume buf)
+    | let _: FileEOF =>
+      env.err.print("EOF")
+      error
+    | let _: FileOK =>
+      env.err.print("OK") // weird
+      error
+    | let _: FileError =>
+      env.err.print("Error opening " + path.string() + ". You might need to download the input and put it into input.txt")
+      error
+    | let _: FileBadFileNumber =>
+      env.err.print("Bad file number")
+      error
+    | let _: FileExists =>
+      env.err.print("Exists")
+      error
+    | let _: FilePermissionDenied =>
+      env.err.print("Permission denied")
+      error
+    end
+
 // stolen from https://github.com/salty-blue-mango/roaring-pony
 primitive BinarySearch
   fun reverse[T: Comparable[T] #read](needle: T, haystack: ReadSeq[T]): (USize, Bool) =>

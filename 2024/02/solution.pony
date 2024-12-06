@@ -3,13 +3,13 @@ use "itertools"
 use "collections"
 use "debug"
 
-class Solution is AocSolution
+actor Solution is AocSolution
   let _env: Env
 
   new create(env: Env) =>
     _env = env
 
-  fun tag day(): U64 => 2
+  fun tag day(): U32 => 2
 
   fun ref get_input(file_path: String): Iterator[Array[I32]] ? =>
     Iter[String](AOCUtils.get_input_lines(file_path, _env)?).map[Array[I32]]({(line: String) =>
@@ -27,55 +27,15 @@ class Solution is AocSolution
       T.from[I8](0)
     end
 
-  fun ref part1(): String iso^ ? =>
+  be part1(notify: SolutionNotify) =>
     var num_safe: USize = 0
-    for levels in get_input("2024/02/input.txt")? do
-      var safe: Bool = true
-      var previous_direction: (I32 | None) = None
-      var previous_level: (I32 | None) = None
-
-      for level in levels.values() do
-        match previous_level
-        | let prev: I32 =>
-          let diff = prev - level
-          let abs_diff = diff.abs()
-          let direction = signum[I32](diff)
-          let cur_safe = 
-            (1 <= abs_diff) and (abs_diff <= 3)
-            and
-            try
-              previous_direction as I32 == direction
-            else
-              true // first comparison
-            end
-          previous_direction = direction
-          if not cur_safe then
-            safe = false
-            break
-          end
-        end
-        previous_level = level
-      end
-      if safe then
-        num_safe = num_safe + 1
-      end
-    end
-    num_safe.string()
-
-
-  fun ref part2(): String iso^ ? =>
-    var num_safe: USize = 0
-    for levels in get_input("2024/02/input.txt")? do
-      for remove_idx in Range[USize](0, levels.size()) do
+    try
+      for levels in get_input("2024/02/input.txt")? do
         var safe: Bool = true
         var previous_direction: (I32 | None) = None
         var previous_level: (I32 | None) = None
 
-        for (idx, level) in levels.pairs() do
-          if idx == remove_idx then
-            continue
-          end
-
+        for level in levels.values() do
           match previous_level
           | let prev: I32 =>
             let diff = prev - level
@@ -92,21 +52,69 @@ class Solution is AocSolution
             previous_direction = direction
             if not cur_safe then
               safe = false
-              break // stop processing with this remove_idx, we are not safe
+              break
             end
           end
           previous_level = level
         end
-
         if safe then
-          //Debug(levels)
-          //Debug("safe when removing " + levels(remove_idx)?.string())
           num_safe = num_safe + 1
-          break // break out iterating over remove_indices
         end
       end
+      notify.done(this, 1, num_safe.string())
+    else
+      notify.fail(this, 1, "Error reading file")
     end
-    num_safe.string()
+
+
+  be part2(notify: SolutionNotify) =>
+    var num_safe: USize = 0
+    try
+      for levels in get_input("2024/02/input.txt")? do
+        for remove_idx in Range[USize](0, levels.size()) do
+          var safe: Bool = true
+          var previous_direction: (I32 | None) = None
+          var previous_level: (I32 | None) = None
+
+          for (idx, level) in levels.pairs() do
+            if idx == remove_idx then
+              continue
+            end
+
+            match previous_level
+            | let prev: I32 =>
+              let diff = prev - level
+              let abs_diff = diff.abs()
+              let direction = signum[I32](diff)
+              let cur_safe = 
+                (1 <= abs_diff) and (abs_diff <= 3)
+                and
+                try
+                  previous_direction as I32 == direction
+                else
+                  true // first comparison
+                end
+              previous_direction = direction
+              if not cur_safe then
+                safe = false
+                break // stop processing with this remove_idx, we are not safe
+              end
+            end
+            previous_level = level
+          end
+
+          if safe then
+            //Debug(levels)
+            //Debug("safe when removing " + levels(remove_idx)?.string())
+            num_safe = num_safe + 1
+            break // break out iterating over remove_indices
+          end
+        end
+      end
+      notify.done(this, 2, num_safe.string())
+    else
+      notify.fail(this, 2, "Error reading input")
+    end
 
 
 

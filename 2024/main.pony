@@ -1,13 +1,19 @@
 use day1 = "01"
 use day2 = "02"
 use day3 = "03"
+use day4 = "04"
 
 use "cli"
 use "itertools"
 use "pony_check"
 
 actor Main
+
+  var _days_started: USize = 0
+  let _env: Env
+
   new create(env: Env) =>
+    _env = env
     let cs =
       try
         CommandSpec.leaf("aoc", "An AOC runner", [
@@ -34,54 +40,58 @@ actor Main
           return
       end
 
-    let day: (U64 | None) = 
-      match cmd.option("day").u64()
+    let day: (U32 | None) =
+      match cmd.option("day").u64().u32()
       | 0 => None // run all days
-      | let other: U64 => other
+      | let other: U32 => other
       end
 
 
-    let solutions: Array[AocSolution ref] ref = [
+    let solutions: Array[AocSolution tag] ref = [
       // add new solution here
+      day4.Solution(env)
       day3.Solution(env)
       day2.Solution(env)
       day1.Solution(env)
     ]
 
-    for solution in Poperator[AocSolution ref].create(solutions) do
+    for solution in Poperator[AocSolution tag].create(solutions) do
       match day
       | None | solution.day() =>
+        _days_started = _days_started + 1
         env.out.print("Running Day " + solution.day().string())
-        try
-          let output = solution.part1()?
-          env.out.print("Part I:")
-          env.out.print("")
-          env.out.print(output)
-          env.out.print("")
-        else
-          env.err.print("Error.")
-          env.exitcode(1)
-          return
-        end
-        try
-          let output = solution.part2()?
-          env.out.print("Part II:")
-          env.out.print("")
-          env.out.print(output)
-          env.out.print("")
-        else
-          env.err.print("Error.")
-          env.exitcode(1)
-          return
-        end
+        solution.part1(recover tag this end)
       end
     end
 
+  be done(solution: AocSolution, part: U32, output: String iso) =>
+    _env.out.print(
+      "Day " + solution.day().string() + "\n" +
+      "Part " + part.string() + "\n" +
+      consume output + "\n"
+    )
+    if part == 1 then
+      solution.part2(recover tag this end)
+    end
 
-trait AocSolution
-  new ref create(env: Env)
+  be fail(solution: AocSolution, part: U32, err: String val) =>
+    _env.out.print(
+      "Day " + solution.day().string() + "\n" +
+      "Part " + part.string() + "\n" +
+      "Error: " + err + "\n"
+    )
+    _env.exitcode(1)
 
-  fun tag day(): U64
 
-  fun ref part1(): String?
-  fun ref part2(): String?
+interface tag AocSolution
+  new tag create(env: Env)
+  fun tag day(): U32
+
+  be part1(notify: SolutionNotify tag)
+  be part2(notify: SolutionNotify tag)
+
+interface tag SolutionNotify
+  be done(solution: AocSolution, part: U32, output: String iso)
+  be fail(solution: AocSolution, part: U32, err: String val)
+
+
