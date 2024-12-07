@@ -2,6 +2,7 @@ use day1 = "01"
 use day2 = "02"
 use day3 = "03"
 use day4 = "04"
+use day5 = "05"
 
 use "cli"
 use "itertools"
@@ -49,6 +50,7 @@ actor Main
 
     let solutions: Array[AocSolution tag] ref = [
       // add new solution here
+      day5.Solution(env)
       day4.Solution(env)
       day3.Solution(env)
       day2.Solution(env)
