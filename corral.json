@@ -2,7 +2,12 @@
   "packages": [
     "2024"
   ],
-  "deps": [],
+  "deps": [
+    {
+      "locator": "github.com/ponylang/peg.git",
+      "version": ""
+    }
+  ],
   "info": {
     "description": "Advent of Code in Pony",
     "homepage": "",
