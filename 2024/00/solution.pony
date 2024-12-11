@@ -7,7 +7,7 @@ use "itertools"
 actor Solution is AocSolution
   let _env: Env
 
-new create(env: Env) =>
+  new create(env: Env) =>
     _env = env
 
   fun tag day(): U32 => 0
