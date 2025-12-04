@@ -26,6 +26,7 @@ actor Solution is AocSolution
     try
       let map = get_map("2024/08/input.txt")?
       // populate antennas per frequency
+      // TODO: this could be done in one pass over the map
       let antennas_per_freq = MapIs[U8, Array[U32]]
       // populate map bounds
       var max_y = USize(0)
