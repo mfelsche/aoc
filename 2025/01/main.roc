@@ -52,8 +52,8 @@ part2 = |input_lines|
         |> List.walk(
             (50, 0),
             |(acc, num_zeroes), elem|
-                (new_acc, num_zero_crossings) = step2(acc, dbg elem)
-                dbg (new_acc, num_zeroes + num_zero_crossings),
+                (new_acc, num_zero_crossings) = step2(acc, elem)
+                (new_acc, num_zeroes + num_zero_crossings),
         )
     Ok res.1
 
@@ -85,9 +85,25 @@ step2 : I32, I32 -> (I32, I32)
 step2 = |current, rotation|
     added = current + rotation
 
-    # known to work when direction = R, rotation is positive
-    num_zero_crossings = Num.abs(Num.floor(Num.to_frac(added) / 100.0))
-    # what to if direction is negative ?
+    num_zero_crossings =
+        if Num.is_negative(rotation) then
+            # turn the effective subtraction
+            # into something we can count with division by 100.0
+            neg_added = if current == 0 then
+                rotation
+            else
+                (current - 100) + rotation
+            neg_added
+            |> Num.abs()
+            |> Num.to_frac()
+            |> Num.div 100.0
+            |> Num.floor() # round up towards zero
+        else
+            # count how often we went from 99 -> 100 (which is 99 -> 0)
+            added
+            |> Num.to_frac()
+            |> Num.div 100.0
+            |> Num.floor() # round down towards zero
     mod = added % 100
     res = if Num.is_negative mod then
         mod + 100
