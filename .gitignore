@@ -4,3 +4,4 @@ input.txt
 /_repos/
 /2025/roc_nightly-linux_x86_64-2025-09-09-d73ea109/
 main
+target/

@@ -88,12 +88,17 @@ step2 = |current, rotation|
     num_zero_crossings =
         if Num.is_negative(rotation) then
             # turn the effective subtraction
-            # into something we can count with division by 100.0
-            neg_added = if current == 0 then
-                rotation
-            else
-                (current - 100) + rotation
-            neg_added
+            # into something where can count the times
+            # we hit zero with division by 100.0
+            (
+                if current == 0 then
+                    # if we are at 0 we can simply count how often we hit -100.0 with rotation
+                    rotation
+                else
+                    # if we become negative by applying the rotation
+                    #
+                    (current - 100) + rotation
+            )
             |> Num.abs()
             |> Num.to_frac()
             |> Num.div 100.0
